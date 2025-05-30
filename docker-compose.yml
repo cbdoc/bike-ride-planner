@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    container_name: bike-ride-planner
+    ports:
+      - "8080:8080"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=your-secret-key-here-change-in-production
+      - DATABASE_URL=sqlite:///rides.db
+    volumes:
+      - ./instance:/app/instance
+    restart: unless-stopped

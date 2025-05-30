@@ -1,0 +1,777 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --info-color: #3498db;
+    --light-bg: #ecf0f1;
+    --white: #ffffff;
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+    --shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-lg: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar {
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 20px;
+    position: relative;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    color: var(--secondary-color);
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--secondary-color);
+}
+
+.nav-links .btn-create-ride {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    padding: 0.6rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.nav-links .btn-create-ride:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+    color: var(--white);
+}
+
+.hero {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.filters select,
+.filters input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--info-color);
+    color: var(--white);
+}
+
+.btn-secondary:hover {
+    background-color: #2980b9;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: var(--white);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    color: var(--white);
+}
+
+.btn-danger {
+    background-color: var(--secondary-color);
+    color: var(--white);
+}
+
+.btn-small {
+    padding: 0.3rem 1rem;
+    font-size: 0.9rem;
+}
+
+.rides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.ride-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.ride-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.ride-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.ride-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.difficulty-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.difficulty-beginner {
+    background-color: #a8e6cf;
+    color: #2d5f3f;
+}
+
+.difficulty-intermediate {
+    background-color: #ffd3b6;
+    color: #8b5a00;
+}
+
+.difficulty-advanced {
+    background-color: #ffaaa5;
+    color: #8b0000;
+}
+
+.difficulty-expert {
+    background-color: #ff8b94;
+    color: #5d0000;
+}
+
+.ride-info {
+    margin-bottom: 1rem;
+}
+
+.ride-info p {
+    margin-bottom: 0.5rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ride-info strong {
+    color: var(--text-dark);
+}
+
+.ride-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.stat {
+    padding: 0.5rem;
+    background-color: var(--light-bg);
+    border-radius: 5px;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.ride-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.spots-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spots-available {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.spots-full {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.modal-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--white);
+    margin: 20px auto;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    animation: modalSlide 0.3s ease-out;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-height: none;
+}
+
+@keyframes modalSlide {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+.close:hover {
+    color: var(--text-dark);
+}
+
+/* Body scroll lock when modal is open */
+body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
+/* Ensure modal content scrolls properly */
+#modalBody {
+    overflow: visible;
+}
+
+/* Custom scrollbar for modal wrapper */
+.modal-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-wrapper::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.participants-list {
+    margin-top: 2rem;
+}
+
+.participant {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: var(--light-bg);
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+}
+
+.participant-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.skill-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    background-color: var(--info-color);
+    color: var(--white);
+}
+
+.notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    color: var(--white);
+    font-weight: 500;
+    display: none;
+    animation: slideIn 0.3s ease-out;
+    z-index: 1001;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.notification.success {
+    background-color: var(--success-color);
+}
+
+.notification.error {
+    background-color: var(--secondary-color);
+}
+
+.notification.warning {
+    background-color: var(--warning-color);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Ride Type and E-bike Styles */
+.ride-type-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ride-type-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.ride-type-badge.mountain {
+    background-color: #8b4513;
+    color: var(--white);
+}
+
+.ride-type-badge.gravel {
+    background-color: #696969;
+    color: var(--white);
+}
+
+.ride-type-badge.road {
+    background-color: #4169e1;
+    color: var(--white);
+}
+
+.ebike-allowed {
+    color: var(--success-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.ebike-not-allowed {
+    color: var(--secondary-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.ebike-indicator {
+    background-color: var(--info-color);
+    color: var(--white);
+    padding: 0.2rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+}
+
+.form-note {
+    display: block;
+    color: var(--warning-color);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+/* Admin styles */
+.admin-rides-list {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin: 1rem 0;
+}
+
+.admin-ride-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    background-color: var(--card-bg);
+}
+
+.admin-ride-item.expired {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.admin-ride-item .ride-info h4 {
+    margin: 0 0 0.5rem 0;
+}
+
+.admin-ride-item .ride-info p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.expired-label {
+    color: #856404;
+    font-weight: 600;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.admin-note {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    font-style: italic;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: flex;
+    }
+    
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--white);
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+        box-shadow: var(--shadow);
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
+    }
+    
+    .nav-links a {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        text-align: center;
+        border-radius: 8px;
+    }
+    
+    .nav-links a:hover {
+        background-color: var(--bg-light);
+    }
+    
+    .nav-links .btn-create-ride {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    .filters {
+        justify-content: center;
+    }
+    
+    .filters select,
+    .filters input {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .rides-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .ride-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .ride-type-info {
+        flex-wrap: wrap;
+    }
+    
+    .admin-ride-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .admin-ride-item button {
+        width: 100%;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+        max-height: 90vh;
+    }
+    
+    .participants-list {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-brand {
+        font-size: 1.2rem;
+    }
+    
+    .logo {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+    
+    .ride-card {
+        padding: 1rem;
+    }
+    
+    .ride-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .stat {
+        padding: 0.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.1rem;
+    }
+}
