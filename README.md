@@ -10,6 +10,8 @@ A beautiful and functional web application for planning mountain biking rides wi
 - 📱 Responsive design for mobile and desktop
 - 🏔️ Track ride details like distance, elevation gain, and difficulty
 - 👤 Manage rider profiles with skill levels
+- 🔐 Admin authentication system
+- 🚀 Multiple deployment options
 
 ## Quick Start
 
@@ -20,7 +22,7 @@ A beautiful and functional web application for planning mountain biking rides wi
 docker-compose up --build
 ```
 
-2. Open your browser to http://localhost:5000
+2. Open your browser to http://localhost:8080
 
 ### Using Virtual Environment
 
@@ -40,7 +42,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-4. Open your browser to http://localhost:5000
+4. Open your browser to http://localhost:8080
 
 ## Usage
 
@@ -64,7 +66,61 @@ The application uses:
 - Vanilla JavaScript for the frontend
 - CSS3 for beautiful, responsive styling
 
+## Deployment
+
+This application is ready for deployment on multiple platforms:
+
+### Fly.io
+```bash
+fly launch
+fly deploy
+```
+
+### Railway
+```bash
+railway login
+railway link
+railway up
+```
+
+### Render
+Connect your GitHub repository and deploy automatically using the included `render.yaml` configuration.
+
+### Heroku
+```bash
+heroku create your-app-name
+git push heroku main
+```
+
+### Docker on VPS
+```bash
+docker-compose up -d
+```
+
+## Admin Access
+
+To set up admin access, create a `.env` file with:
+```
+ADMIN_PASSWORD=your-secure-password-here
+```
+
+Then run the password setup script:
+```bash
+python update_admin_password.py
+```
+
+Default admin username is `admin`.
+
 ## Environment Variables
 
 - `SECRET_KEY`: Flask secret key (required in production)
 - `DATABASE_URL`: Database connection string (defaults to SQLite)
+- `PORT`: Application port (defaults to 8080)
+
+## Technology Stack
+
+- **Backend**: Flask with SQLAlchemy ORM
+- **Database**: SQLite (configurable via DATABASE_URL)
+- **Frontend**: Vanilla JavaScript with modern CSS
+- **Authentication**: Flask-Login with Werkzeug password hashing
+- **Deployment**: Docker/Docker Compose ready
