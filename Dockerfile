@@ -37,4 +37,4 @@ EXPOSE 8080
 # Command to run the application using Gunicorn
 # This version explicitly uses /bin/sh -c to ensure shell expansion of $PORT
 # and 'exec' to make Gunicorn the main process (PID 1) for better signal handling.
-CMD ["/bin/sh", "-c", "exec gunicorn run:app --bind 0.0.0.0:$PORT --workers 1"]
+CMD exec gunicorn run:app --bind 0.0.0.0:$PORT --workers 1
