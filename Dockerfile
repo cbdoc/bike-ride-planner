@@ -17,4 +17,4 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 8080
 
 ENV PORT=8080
-CMD /bin/bash -c "gunicorn --bind 0.0.0.0:$PORT --workers 1 run:app"
+CMD ["/bin/bash", "-c", "gunicorn --bind 0.0.0.0:$PORT --workers 1 run:app"]
