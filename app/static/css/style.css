@@ -737,6 +737,8 @@ body.modal-open {
         width: 95%;
         margin: 1rem;
         max-height: 90vh;
+        background-color: #ffffff !important;
+        background: #ffffff !important;
     }
     
     .participants-list {
