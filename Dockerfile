@@ -14,7 +14,6 @@ COPY . .
 ENV FLASK_APP=run.py
 ENV PYTHONUNBUFFERED=1
 
-EXPOSE 8080
-
-ENV PORT=8080
-CMD gunicorn run:app --bind 0.0.0.0:$PORT --workers 1
+COPY start.py /start.py
+RUN chmod +x /start.py
+CMD ["python3", "/start.py"]
