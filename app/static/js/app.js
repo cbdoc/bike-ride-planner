@@ -335,8 +335,9 @@ function showCreateRideForm() {
             </div>
             
             <div class="form-group">
-                <label for="created_by">Your Email</label>
-                <input type="email" id="created_by" value="${currentUserEmail}" required>
+                <label for="created_by">Your Name or Email</label>
+                <input type="text" id="created_by" value="${currentUserEmail}" placeholder="Enter your name or email" required>
+                <small class="form-note">This will be used to track your rides and allow you to edit them in the future.</small>
             </div>
             
             <button type="submit" class="btn btn-primary">Create Ride</button>
