@@ -23,13 +23,21 @@ def create_app():
     app.register_blueprint(main)
     
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as e:
+            app.logger.warning(f"Database tables may already exist: {e}")
+        
         # Create default admin if doesn't exist
         from app.models import Admin
-        if not Admin.query.filter_by(username='admin').first():
-            admin = Admin(username='admin')
-            admin.set_password('admin123')  # Change this in production!
-            db.session.add(admin)
-            db.session.commit()
+        try:
+            if not Admin.query.filter_by(username='admin').first():
+                admin_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
+                admin = Admin(username='admin')
+                admin.set_password(admin_password)
+                db.session.add(admin)
+                db.session.commit()
+        except Exception as e:
+            app.logger.warning(f"Could not create default admin: {e}")
     
     return app
