@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Bike Ride Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .section {
+            margin: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .section-title {
+            background: #e9ecef;
+            padding: 15px 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .ip-address {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .timestamp {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Admin Analytics Dashboard</h1>
+            <div>
+                <a href="/" class="btn">Back to Site</a>
+                <button onclick="logout()" class="btn" style="background: #dc3545; margin-left: 10px;">Logout</button>
+            </div>
+        </div>
+        
+        <div class="stats-grid" id="stats">
+            <div class="loading">Loading analytics...</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Recent Visitors (Last 50)</div>
+            <div class="table-container">
+                <table id="visitors-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>IP Address</th>
+                            <th>Page</th>
+                            <th>Method</th>
+                            <th>User Agent</th>
+                        </tr>
+                    </thead>
+                    <tbody id="visitors-body">
+                        <tr><td colspan="5" class="loading">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Top Pages</div>
+            <div class="table-container">
+                <table id="pages-table">
+                    <thead>
+                        <tr>
+                            <th>Page</th>
+                            <th>Visits</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pages-body">
+                        <tr><td colspan="2" class="loading">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/api/admin/analytics');
+                if (!response.ok) {
+                    throw new Error('Failed to load analytics');
+                }
+                
+                const data = await response.json();
+                
+                // Update stats
+                const statsHtml = `
+                    <div class="stat-card">
+                        <div class="stat-number">${data.total_visits}</div>
+                        <div class="stat-label">Total Visits (${data.period_days} days)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${data.unique_visitors}</div>
+                        <div class="stat-label">Unique Visitors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${data.app_stats.total_rides}</div>
+                        <div class="stat-label">Total Rides</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${data.app_stats.active_rides}</div>
+                        <div class="stat-label">Active Rides</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${data.app_stats.total_riders}</div>
+                        <div class="stat-label">Total Riders</div>
+                    </div>
+                `;
+                document.getElementById('stats').innerHTML = statsHtml;
+                
+                // Update visitors table
+                const visitorsHtml = data.recent_visits.map(visit => `
+                    <tr>
+                        <td class="timestamp">${new Date(visit.timestamp).toLocaleString()}</td>
+                        <td><span class="ip-address">${visit.ip}</span></td>
+                        <td>${visit.page}</td>
+                        <td>${visit.method}</td>
+                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${visit.user_agent}</td>
+                    </tr>
+                `).join('');
+                document.getElementById('visitors-body').innerHTML = visitorsHtml;
+                
+                // Update pages table
+                const pagesHtml = data.top_pages.map(page => `
+                    <tr>
+                        <td>${page.page}</td>
+                        <td>${page.visits}</td>
+                    </tr>
+                `).join('');
+                document.getElementById('pages-body').innerHTML = pagesHtml;
+                
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                document.getElementById('stats').innerHTML = '<div class="loading">Error loading analytics data</div>';
+            }
+        }
+        
+        async function logout() {
+            try {
+                await fetch('/api/admin/logout', { method: 'POST' });
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        }
+        
+        // Load analytics on page load
+        loadAnalytics();
+        
+        // Refresh every 30 seconds
+        setInterval(loadAnalytics, 30000);
+    </script>
+</body>
+</html>

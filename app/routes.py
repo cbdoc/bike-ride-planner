@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, jsonify, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.models import Ride, Rider, RideParticipant, Admin
+from app.models import Ride, Rider, RideParticipant, Admin, VisitorLog
 from datetime import datetime, timedelta
 from functools import wraps
+from sqlalchemy import func, desc
 
 main = Blueprint('main', __name__)
 
@@ -285,3 +286,83 @@ def admin_delete_ride(ride_id):
     db.session.delete(ride)
     db.session.commit()
     return jsonify({'message': 'Ride deleted successfully by admin'}), 200
+
+@main.route('/api/admin/analytics', methods=['GET'])
+@admin_required
+def admin_analytics():
+    """Admin analytics dashboard data"""
+    # Get date range from query params (default to last 30 days)
+    days = request.args.get('days', 30, type=int)
+    start_date = datetime.utcnow() - timedelta(days=days)
+    
+    # Basic stats
+    total_visits = VisitorLog.query.filter(VisitorLog.timestamp >= start_date).count()
+    unique_visitors = db.session.query(func.count(func.distinct(VisitorLog.ip_address))).filter(
+        VisitorLog.timestamp >= start_date
+    ).scalar()
+    
+    # Recent visits
+    recent_visits = VisitorLog.query.filter(
+        VisitorLog.timestamp >= start_date
+    ).order_by(desc(VisitorLog.timestamp)).limit(50).all()
+    
+    visits_data = []
+    for visit in recent_visits:
+        visits_data.append({
+            'ip': visit.ip_address,
+            'page': visit.page,
+            'method': visit.method,
+            'timestamp': visit.timestamp.isoformat(),
+            'user_agent': visit.user_agent[:100] + '...' if len(visit.user_agent) > 100 else visit.user_agent,
+            'referrer': visit.referrer
+        })
+    
+    # Daily visits for the last week
+    daily_visits = []
+    for i in range(7):
+        day_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=i)
+        day_end = day_start + timedelta(days=1)
+        count = VisitorLog.query.filter(
+            VisitorLog.timestamp >= day_start,
+            VisitorLog.timestamp < day_end
+        ).count()
+        daily_visits.append({
+            'date': day_start.strftime('%Y-%m-%d'),
+            'visits': count
+        })
+    daily_visits.reverse()
+    
+    # Top pages
+    top_pages = db.session.query(
+        VisitorLog.page,
+        func.count(VisitorLog.id).label('count')
+    ).filter(
+        VisitorLog.timestamp >= start_date
+    ).group_by(VisitorLog.page).order_by(desc('count')).limit(10).all()
+    
+    pages_data = [{'page': page, 'visits': count} for page, count in top_pages]
+    
+    # App stats
+    total_rides = Ride.query.count()
+    total_riders = Rider.query.count()
+    active_rides = Ride.query.filter(Ride.date >= datetime.utcnow()).count()
+    
+    return jsonify({
+        'period_days': days,
+        'total_visits': total_visits,
+        'unique_visitors': unique_visitors,
+        'daily_visits': daily_visits,
+        'recent_visits': visits_data,
+        'top_pages': pages_data,
+        'app_stats': {
+            'total_rides': total_rides,
+            'total_riders': total_riders,
+            'active_rides': active_rides
+        }
+    })
+
+@main.route('/admin')
+@login_required
+def admin_dashboard():
+    """Admin dashboard page"""
+    return render_template('admin.html')

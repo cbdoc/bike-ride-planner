@@ -69,3 +69,15 @@ class RideParticipant(db.Model):
     
     ride = db.relationship('Ride', back_populates='participants')
     rider = db.relationship('Rider', back_populates='participations')
+
+class VisitorLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ip_address = db.Column(db.String(45))  # IPv6 can be up to 45 chars
+    user_agent = db.Column(db.Text)
+    page = db.Column(db.String(200))
+    method = db.Column(db.String(10))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    referrer = db.Column(db.String(500))
+    
+    def __repr__(self):
+        return f'<Visit {self.ip_address} -> {self.page} at {self.timestamp}>'

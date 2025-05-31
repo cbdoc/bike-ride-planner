@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_login import LoginManager
@@ -21,6 +21,42 @@ def create_app():
     
     from app.routes import main
     app.register_blueprint(main)
+    
+    # Add visitor tracking middleware
+    @app.before_request
+    def track_visitor():
+        from app.models import VisitorLog
+        
+        # Skip tracking for static files and admin routes
+        if request.endpoint and (
+            request.endpoint.startswith('static') or 
+            request.path.startswith('/admin') or
+            request.path.startswith('/api/admin')
+        ):
+            return
+            
+        # Get client IP (handle proxies)
+        ip = request.headers.get('X-Forwarded-For', 
+                               request.headers.get('X-Real-IP', 
+                                                 request.remote_addr))
+        if ip and ',' in ip:
+            ip = ip.split(',')[0].strip()
+        
+        # Log the visit
+        try:
+            visit = VisitorLog(
+                ip_address=ip,
+                user_agent=request.headers.get('User-Agent', ''),
+                page=request.path,
+                method=request.method,
+                referrer=request.headers.get('Referer', '')
+            )
+            db.session.add(visit)
+            db.session.commit()
+        except Exception as e:
+            # Don't let logging errors break the app
+            db.session.rollback()
+            app.logger.error(f"Failed to log visitor: {e}")
     
     with app.app_context():
         db.create_all()
