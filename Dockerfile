@@ -34,7 +34,9 @@ ENV PYTHONUNBUFFERED=1
 # We'll use 8080 as a common default, but Gunicorn will actually use $PORT.
 EXPOSE 8080
 
-# Command to run the application using Gunicorn
-# This version explicitly uses /bin/sh -c to ensure shell expansion of $PORT
-# and 'exec' to make Gunicorn the main process (PID 1) for better signal handling.
-CMD ["/bin/bash", "-c", "gunicorn run:app –bind 0.0.0.0:$PORT"]
+# Copy the startup script and make it executable
+COPY scripts/docker-cmd /app/scripts/docker-cmd
+RUN chmod +x /app/scripts/docker-cmd
+
+# Command to run the application using our startup script
+CMD ["/app/scripts/docker-cmd"]
