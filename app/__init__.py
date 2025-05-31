@@ -22,22 +22,7 @@ def create_app():
     from app.routes import main
     app.register_blueprint(main)
     
-    with app.app_context():
-        try:
-            db.create_all()
-        except Exception as e:
-            app.logger.warning(f"Database tables may already exist: {e}")
-        
-        # Create default admin if doesn't exist
-        from app.models import Admin
-        try:
-            if not Admin.query.filter_by(username='admin').first():
-                admin_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
-                admin = Admin(username='admin')
-                admin.set_password(admin_password)
-                db.session.add(admin)
-                db.session.commit()
-        except Exception as e:
-            app.logger.warning(f"Could not create default admin: {e}")
+    # Database initialization is now handled by migrate_db.py
+    # This prevents startup issues with existing databases
     
     return app

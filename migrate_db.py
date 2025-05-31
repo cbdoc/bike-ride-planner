@@ -1,54 +1,40 @@
 #!/usr/bin/env python3
-"""
-Database migration script to add new columns for ride types and e-bike support.
-Run this script to update existing databases with the new schema.
-"""
 
-import sqlite3
 import os
+from app import create_app, db
+from app.models import Admin
+from sqlalchemy import inspect
 
-def migrate_database():
-    db_path = os.path.join('instance', 'rides.db')
+def init_database():
+    """Initialize database safely for production deployment"""
+    app = create_app()
     
-    if not os.path.exists(db_path):
-        print("No existing database found. New database will be created with updated schema.")
-        return
-    
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    
-    try:
-        # Check if columns already exist
-        cursor.execute("PRAGMA table_info(ride)")
-        columns = [column[1] for column in cursor.fetchall()]
+    with app.app_context():
+        # Check if database/tables exist
+        inspector = inspect(db.engine)
+        existing_tables = inspector.get_table_names()
         
-        # Add ride_type column if it doesn't exist
-        if 'ride_type' not in columns:
-            cursor.execute("ALTER TABLE ride ADD COLUMN ride_type VARCHAR(20) DEFAULT 'mountain'")
-            print("Added ride_type column to ride table")
+        if not existing_tables:
+            print("Creating database tables...")
+            db.create_all()
+            print("Database tables created successfully!")
+        else:
+            print(f"Database already exists with tables: {existing_tables}")
         
-        # Add ebikes_allowed column if it doesn't exist
-        if 'ebikes_allowed' not in columns:
-            cursor.execute("ALTER TABLE ride ADD COLUMN ebikes_allowed BOOLEAN DEFAULT 1")
-            print("Added ebikes_allowed column to ride table")
-        
-        # Check ride_participant table
-        cursor.execute("PRAGMA table_info(ride_participant)")
-        participant_columns = [column[1] for column in cursor.fetchall()]
-        
-        # Add using_ebike column if it doesn't exist
-        if 'using_ebike' not in participant_columns:
-            cursor.execute("ALTER TABLE ride_participant ADD COLUMN using_ebike BOOLEAN DEFAULT 0")
-            print("Added using_ebike column to ride_participant table")
-        
-        conn.commit()
-        print("Database migration completed successfully!")
-        
-    except Exception as e:
-        print(f"Error during migration: {e}")
-        conn.rollback()
-    finally:
-        conn.close()
+        # Create admin user if it doesn't exist
+        try:
+            admin = Admin.query.filter_by(username='admin').first()
+            if not admin:
+                admin_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
+                admin = Admin(username='admin')
+                admin.set_password(admin_password)
+                db.session.add(admin)
+                db.session.commit()
+                print("Admin user created successfully!")
+            else:
+                print("Admin user already exists")
+        except Exception as e:
+            print(f"Admin user creation failed: {e}")
 
-if __name__ == "__main__":
-    migrate_database()
+if __name__ == '__main__':
+    init_database()
