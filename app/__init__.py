@@ -22,7 +22,16 @@ def create_app():
     from app.routes import main
     app.register_blueprint(main)
     
-    # Database initialization is now handled by migrate_db.py
-    # This prevents startup issues with existing databases
+    with app.app_context():
+        db.create_all()
+        
+        # Create default admin if doesn't exist
+        from app.models import Admin
+        if not Admin.query.filter_by(username='admin').first():
+            admin_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
+            admin = Admin(username='admin')
+            admin.set_password(admin_password)
+            db.session.add(admin)
+            db.session.commit()
     
     return app

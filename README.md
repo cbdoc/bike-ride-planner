@@ -68,34 +68,25 @@ The application uses:
 
 ## Deployment
 
-This application is ready for deployment on multiple platforms:
+### Railway (Recommended - Simplest)
 
-### Fly.io
-```bash
-fly launch
-fly deploy
-```
+1. Go to [railway.app](https://railway.app)
+2. Click "Deploy from GitHub repo" 
+3. Connect your GitHub account and select this repository
+4. Set environment variable: `ADMIN_PASSWORD=your-secure-password`
+5. Deploy automatically!
 
-### Railway
-```bash
-railway login
-railway link
-railway up
-```
+Railway will:
+- Auto-detect your Docker setup
+- Handle persistent storage
+- Provide HTTPS automatically
+- Deploy on every GitHub push
 
-### Render
-Connect your GitHub repository and deploy automatically using the included `render.yaml` configuration.
+### Other Options
 
-### Heroku
-```bash
-heroku create your-app-name
-git push heroku main
-```
-
-### Docker on VPS
-```bash
-docker-compose up -d
-```
+**Render**: Connect GitHub repo, uses `render.yaml`
+**Heroku**: `git push heroku main`
+**Docker on VPS**: `docker-compose up -d`
 
 ## Admin Access
 
