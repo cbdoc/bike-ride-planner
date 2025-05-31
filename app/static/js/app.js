@@ -171,18 +171,18 @@ async function showEditRideForm(rideId) {
             <h2>Edit Ride</h2>
             <form id="editRideForm" onsubmit="editRide(event, ${rideId})">
                 <div class="form-group">
-                    <label for="edit_title">Ride Title</label>
+                    <label for="edit_title">Ride Title *</label>
                     <input type="text" id="edit_title" value="${ride.title}" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="edit_trail_name">Trail Name</label>
+                    <label for="edit_trail_name">Trail Name *</label>
                     <input type="text" id="edit_trail_name" value="${ride.trail_name}" required>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="edit_ride_type">Ride Type</label>
+                        <label for="edit_ride_type">Ride Type *</label>
                         <select id="edit_ride_type" required>
                             <option value="mountain" ${ride.ride_type === 'mountain' ? 'selected' : ''}>Mountain</option>
                             <option value="gravel" ${ride.ride_type === 'gravel' ? 'selected' : ''}>Gravel</option>
@@ -191,7 +191,7 @@ async function showEditRideForm(rideId) {
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit_difficulty">Difficulty</label>
+                        <label for="edit_difficulty">Difficulty *</label>
                         <select id="edit_difficulty" required>
                             <option value="beginner" ${ride.difficulty === 'beginner' ? 'selected' : ''}>Beginner</option>
                             <option value="intermediate" ${ride.difficulty === 'intermediate' ? 'selected' : ''}>Intermediate</option>
@@ -203,12 +203,12 @@ async function showEditRideForm(rideId) {
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="edit_max_riders">Max Riders</label>
+                        <label for="edit_max_riders">Max Riders *</label>
                         <input type="number" id="edit_max_riders" min="2" max="50" value="${ride.max_riders}" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit_ebikes_allowed">E-bikes Allowed</label>
+                        <label for="edit_ebikes_allowed">E-bikes Allowed *</label>
                         <select id="edit_ebikes_allowed" required>
                             <option value="true" ${ride.ebikes_allowed ? 'selected' : ''}>Yes</option>
                             <option value="false" ${!ride.ebikes_allowed ? 'selected' : ''}>No</option>
@@ -229,12 +229,12 @@ async function showEditRideForm(rideId) {
                 </div>
                 
                 <div class="form-group">
-                    <label for="edit_date">Date & Time</label>
+                    <label for="edit_date">Date & Time *</label>
                     <input type="datetime-local" id="edit_date" value="${dateForInput}" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="edit_meeting_point">Meeting Point</label>
+                    <label for="edit_meeting_point">Meeting Point *</label>
                     <input type="text" id="edit_meeting_point" value="${ride.meeting_point}" required>
                 </div>
                 
@@ -262,18 +262,18 @@ function showCreateRideForm() {
         <h2>Create New Ride</h2>
         <form id="createRideForm" onsubmit="createRide(event)">
             <div class="form-group">
-                <label for="title">Ride Title</label>
+                <label for="title">Ride Title *</label>
                 <input type="text" id="title" required>
             </div>
             
             <div class="form-group">
-                <label for="trail_name">Trail Name</label>
+                <label for="trail_name">Trail Name *</label>
                 <input type="text" id="trail_name" required>
             </div>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="ride_type">Ride Type</label>
+                    <label for="ride_type">Ride Type *</label>
                     <select id="ride_type" required>
                         <option value="mountain" selected>Mountain</option>
                         <option value="gravel">Gravel</option>
@@ -282,7 +282,7 @@ function showCreateRideForm() {
                 </div>
                 
                 <div class="form-group">
-                    <label for="difficulty">Difficulty</label>
+                    <label for="difficulty">Difficulty *</label>
                     <select id="difficulty" required>
                         <option value="beginner">Beginner</option>
                         <option value="intermediate" selected>Intermediate</option>
@@ -294,12 +294,12 @@ function showCreateRideForm() {
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="max_riders">Max Riders</label>
+                    <label for="max_riders">Max Riders *</label>
                     <input type="number" id="max_riders" min="2" max="50" value="10" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="ebikes_allowed">E-bikes Allowed</label>
+                    <label for="ebikes_allowed">E-bikes Allowed *</label>
                     <select id="ebikes_allowed" required>
                         <option value="true" selected>Yes</option>
                         <option value="false">No</option>
@@ -320,12 +320,12 @@ function showCreateRideForm() {
             </div>
             
             <div class="form-group">
-                <label for="date">Date & Time</label>
+                <label for="date">Date & Time *</label>
                 <input type="datetime-local" id="date" required>
             </div>
             
             <div class="form-group">
-                <label for="meeting_point">Meeting Point</label>
+                <label for="meeting_point">Meeting Point *</label>
                 <input type="text" id="meeting_point" placeholder="e.g., Parking lot at trailhead" required>
             </div>
             
@@ -335,9 +335,29 @@ function showCreateRideForm() {
             </div>
             
             <div class="form-group">
-                <label for="created_by">Your Name or Email</label>
+                <label for="created_by">Your Name or Email *</label>
                 <input type="text" id="created_by" value="${currentUserEmail}" placeholder="Enter your name or email" required>
                 <small class="form-note">This will be used to track your rides and allow you to edit them in the future.</small>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="organizer_skill_level">Your Skill Level *</label>
+                    <select id="organizer_skill_level" required>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate" selected>Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="organizer_using_ebike">Will you use an E-bike? *</label>
+                    <select id="organizer_using_ebike" required>
+                        <option value="false" selected>No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                </div>
             </div>
             
             <button type="submit" class="btn btn-primary">Create Ride</button>
@@ -349,6 +369,15 @@ function showCreateRideForm() {
 
 async function createRide(event) {
     event.preventDefault();
+    
+    // Validate organizer e-bike choice against ride policy
+    const ebikesAllowed = document.getElementById('ebikes_allowed').value === 'true';
+    const organizerUsingEbike = document.getElementById('organizer_using_ebike').value === 'true';
+    
+    if (organizerUsingEbike && !ebikesAllowed) {
+        showNotification('You cannot use an e-bike on a ride that doesn\'t allow e-bikes', 'error');
+        return;
+    }
     
     const formData = {
         title: document.getElementById('title').value,
@@ -362,7 +391,9 @@ async function createRide(event) {
         date: document.getElementById('date').value,
         meeting_point: document.getElementById('meeting_point').value,
         description: document.getElementById('description').value,
-        created_by: document.getElementById('created_by').value
+        created_by: document.getElementById('created_by').value,
+        organizer_skill_level: document.getElementById('organizer_skill_level').value,
+        organizer_using_ebike: document.getElementById('organizer_using_ebike').value === 'true'
     };
     
     currentUserEmail = formData.created_by;
@@ -432,23 +463,23 @@ function showJoinRideForm(rideId, ebikesAllowed) {
         <h2>Join Ride</h2>
         <form id="joinRideForm" onsubmit="joinRide(event, ${rideId})">
             <div class="form-group">
-                <label for="name">Your Name</label>
+                <label for="name">Your Name *</label>
                 <input type="text" id="name" required>
             </div>
             
             <div class="form-group">
                 <label for="email">Your Email</label>
-                <input type="email" id="email" value="${currentUserEmail}" required>
+                <input type="email" id="email" value="${currentUserEmail}">
             </div>
             
             <div class="form-group">
-                <label for="phone">Phone (optional)</label>
+                <label for="phone">Phone</label>
                 <input type="tel" id="phone">
             </div>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="skill_level">Skill Level</label>
+                    <label for="skill_level">Skill Level *</label>
                     <select id="skill_level" required>
                         <option value="beginner">Beginner</option>
                         <option value="intermediate" selected>Intermediate</option>
@@ -458,7 +489,7 @@ function showJoinRideForm(rideId, ebikesAllowed) {
                 </div>
                 
                 <div class="form-group">
-                    <label for="using_ebike">Using E-bike?</label>
+                    <label for="using_ebike">Using E-bike? *</label>
                     <select id="using_ebike" required ${!ebikesAllowed ? 'disabled' : ''}>
                         <option value="false" selected>No</option>
                         <option value="true" ${!ebikesAllowed ? 'disabled' : ''}>Yes</option>
@@ -485,8 +516,11 @@ async function joinRide(event, rideId) {
         using_ebike: document.getElementById('using_ebike').value === 'true'
     };
     
-    currentUserEmail = formData.email;
-    localStorage.setItem('userEmail', currentUserEmail);
+    // Only update stored email if provided
+    if (formData.email) {
+        currentUserEmail = formData.email;
+        localStorage.setItem('userEmail', currentUserEmail);
+    }
     
     try {
         const response = await fetch(`/api/rides/${rideId}/join`, {

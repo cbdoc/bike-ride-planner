@@ -77,6 +77,41 @@ def rides():
         )
         db.session.add(new_ride)
         db.session.commit()
+        
+        # Automatically add the organizer as a participant
+        organizer_name = data['created_by']
+        organizer_email = ''
+        
+        # Try to determine if created_by is an email or name
+        if '@' in organizer_name:
+            organizer_email = organizer_name
+        
+        # Look for existing rider by email if it looks like an email
+        organizer_rider = None
+        if organizer_email:
+            organizer_rider = Rider.query.filter_by(email=organizer_email).first()
+        
+        if not organizer_rider:
+            # Create new rider for organizer
+            organizer_rider = Rider(
+                name=organizer_name,
+                email=organizer_email,
+                phone='',
+                skill_level=data.get('organizer_skill_level', 'intermediate')
+            )
+            db.session.add(organizer_rider)
+            db.session.commit()
+        
+        # Add organizer as participant
+        organizer_participant = RideParticipant(
+            ride_id=new_ride.id,
+            rider_id=organizer_rider.id,
+            status='confirmed',
+            using_ebike=data.get('organizer_using_ebike', False)
+        )
+        db.session.add(organizer_participant)
+        db.session.commit()
+        
         return jsonify({'message': 'Ride created successfully', 'id': new_ride.id}), 201
     
     upcoming_rides = Ride.query.filter(Ride.date >= datetime.utcnow()).order_by(Ride.date).all()
@@ -205,11 +240,18 @@ def join_ride(ride_id):
     if not ride.ebikes_allowed and data.get('using_ebike', False):
         return jsonify({'message': 'E-bikes are not allowed on this ride'}), 400
     
-    rider = Rider.query.filter_by(email=data['email']).first()
+    email = data.get('email', '').strip()
+    
+    # Look for existing rider by email if provided
+    rider = None
+    if email:
+        rider = Rider.query.filter_by(email=email).first()
+    
     if not rider:
+        # Create new rider (email is optional now)
         rider = Rider(
             name=data['name'],
-            email=data['email'],
+            email=email,
             phone=data.get('phone', ''),
             skill_level=data.get('skill_level', 'intermediate')
         )

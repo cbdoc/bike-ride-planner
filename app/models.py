@@ -22,7 +22,7 @@ class Admin(UserMixin, db.Model):
 class Rider(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(100), nullable=True)
     phone = db.Column(db.String(20))
     skill_level = db.Column(db.String(20), default='intermediate')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
