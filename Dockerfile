@@ -16,5 +16,8 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8080
 
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 ENV PORT=8080
-CMD ["/bin/bash", "-c", "gunicorn --bind 0.0.0.0:$PORT --workers 1 run:app"]
+CMD ["/start.sh"]
