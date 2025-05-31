@@ -652,13 +652,7 @@ function formatDate(dateString) {
     return date.toLocaleString('en-US', options);
 }
 
-window.onclick = function(event) {
-    const modal = document.getElementById('modal');
-    const modalWrapper = modal.querySelector('.modal-wrapper');
-    if (event.target === modal || event.target === modalWrapper) {
-        closeModal();
-    }
-}
+// Modal can only be closed with X button, Cancel button, or Escape key
 
 async function showAdminLogin() {
     closeMobileMenu();
@@ -786,22 +780,8 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAdminStatus();
     fetchRides();
     
-    // Add click handler for modal background
-    const modal = document.getElementById('modal');
-    modal.addEventListener('click', function(e) {
-        const modalWrapper = modal.querySelector('.modal-wrapper');
-        if (e.target === modal || e.target === modalWrapper) {
-            closeModal();
-        }
-    });
-    
-    // Prevent modal content clicks from closing modal
-    document.addEventListener('click', function(e) {
-        const modalContent = document.querySelector('.modal-content');
-        if (modalContent && modalContent.contains(e.target)) {
-            e.stopPropagation();
-        }
-    });
+    // Modal can only be closed with X button, Cancel button, or Escape key
+    // Removed click-outside-to-close functionality to prevent accidental data loss
     
     // Add escape key handler
     document.addEventListener('keydown', function(e) {
