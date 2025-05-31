@@ -35,8 +35,6 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 8080
 
 # Command to run the application using Gunicorn
-# This is the crucial change:
-# We use $PORT (provided by Railway) instead of a hardcoded port.
-# Gunicorn will listen on all available network interfaces (0.0.0.0)
-# on the port specified by the $PORT environment variable.
-CMD gunicorn run:app --bind 0.0.0.0:$PORT --workers 1
+# This version explicitly uses /bin/sh -c to ensure shell expansion of $PORT
+# and 'exec' to make Gunicorn the main process (PID 1) for better signal handling.
+CMD ["/bin/sh", "-c", "exec gunicorn run:app --bind 0.0.0.0:$PORT --workers 1"]
