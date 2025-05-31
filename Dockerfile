@@ -16,4 +16,4 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "4", "run:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "run:app"]
