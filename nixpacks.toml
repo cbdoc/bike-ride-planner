@@ -1,8 +1,2 @@
-[phases.setup]
-nixPkgs = ["python311", "gcc"]
-
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
-
 [start]
-cmd = "gunicorn --bind 0.0.0.0:$PORT run:app"
+cmd = "gunicorn run:app --bind 0.0.0.0:8080"
