@@ -5,34 +5,35 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install system dependencies
-# gcc is often needed for building some Python packages
 RUN apt-get update && apt-get install -y \
     gcc \
-    # Clean up apt lists to reduce image size
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container at /app
 COPY requirements.txt .
 
 # Install any needed packages specified in requirements.txt
-# --no-cache-dir reduces layer size
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application's code into the container at /app
 COPY . .
 
 # Set environment variables
-# FLASK_APP tells Flask where your application instance is
 ENV FLASK_APP=run.py
-# PYTHONUNBUFFERED ensures that Python output (like print statements)
-# is sent straight to terminal without being buffered first, which is good for logging.
 ENV PYTHONUNBUFFERED=1
 
-# Expose the port the app runs on.
-# This is documentation for the user and for tools like Docker.
-# Railway will override this with its own $PORT, but it's good practice.
-# We'll use 8080 as a common default, but Gunicorn will actually use $PORT.
-EXPOSE 8080
+# Create a startup script
+RUN echo '#!/bin/sh\n\
+echo "PORT environment variable is: $PORT"\n\
+echo "All environment variables:"\n\
+env | grep -i port\n\
+if [ -z "$PORT" ]; then\n\
+    echo "PORT is not set, using 8080"\n\
+    export PORT=8080\n\
+fi\n\
+echo "Starting gunicorn on port $PORT"\n\
+exec gunicorn run:app --bind 0.0.0.0:$PORT --workers 1' > /app/start.sh && \
+chmod +x /app/start.sh
 
-# Command to run the application using exec
-CMD exec gunicorn --bind 0.0.0.0:$PORT run:app
+# Use the startup script
+CMD ["/app/start.sh"]
