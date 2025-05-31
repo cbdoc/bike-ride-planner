@@ -18,22 +18,16 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application's code into the container at /app
 COPY . .
 
+# Declare PORT as build argument so Railway can inject it
+ARG PORT
+ENV PORT=${PORT:-8080}
+
 # Set environment variables
 ENV FLASK_APP=run.py
 ENV PYTHONUNBUFFERED=1
 
-# Create a startup script
-RUN echo '#!/bin/sh\n\
-echo "PORT environment variable is: $PORT"\n\
-echo "All environment variables:"\n\
-env | grep -i port\n\
-if [ -z "$PORT" ]; then\n\
-    echo "PORT is not set, using 8080"\n\
-    export PORT=8080\n\
-fi\n\
-echo "Starting gunicorn on port $PORT"\n\
-exec gunicorn run:app --bind 0.0.0.0:$PORT --workers 1' > /app/start.sh && \
-chmod +x /app/start.sh
+# Expose the port
+EXPOSE $PORT
 
-# Use the startup script
-CMD ["/app/start.sh"]
+# Command to run the application
+CMD exec gunicorn run:app --bind 0.0.0.0:$PORT --workers 1
